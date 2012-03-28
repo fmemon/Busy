@@ -235,11 +235,13 @@ enum {
         
         
         [self setupBoard];
-        [self createWall:1.3f where:8.9f];
-        [self createWall:2.3f where:11.9f];
-        [self createWall:4.3f where:6.9f];
-        [self createWall:6.3f where:4.9f];
-        [self createWall:8.3f where:2.9f];
+        
+        [self createWall:3.3f where:13.5f];
+        [self createWall:3.3f where:11.5f];
+        [self createWall:2.3f where:9.5f];
+        [self createWall:4.3f where:7.5f];
+        [self createWall:6.3f where:5.5f];
+        [self createWall:8.3f where:3.5f];
         
         [self schedule: @selector(tick:)]; 
         
@@ -262,7 +264,7 @@ enum {
     sprite.position = ccp(480.0f/2, 50/PTM_RATIO);
     [self addChild:sprite z:1 tag:11];
     bodyDef.userData = sprite;
-    bodyDef.position.Set(0.47f, 11.58f);
+    bodyDef.position.Set(0.47f, 14.5f);
     ball = world->CreateBody(&bodyDef);
     circleShape.m_radius = (sprite.contentSize.width / 32.0f) * 0.5f;
     fixtureDef.shape = &circleShape;
@@ -297,12 +299,11 @@ enum {
     //bodyDef.userData = sprite;
     
     bodyDef.type = b2_staticBody;
-    bodyDef.position.Set(length, y);
+    //bodyDef.position.Set(length, y);
+    bodyDef.position.Set(0.0f, y);
     //bodyDef.angle = -0.222508f;
     b2Body* wall = world->CreateBody(&bodyDef);
-    boxy.SetAsBox(3.0f, 0.35f);
-    boxy.m_centroid.Set(0, 0 );
-
+    boxy.SetAsBox(length, 0.35f);
     fixtureDef.shape = &boxy;
     fixtureDef.density = 0.015000f;
     fixtureDef.friction = 0.300000f;
@@ -312,9 +313,9 @@ enum {
     fixtureDef.filter.maskBits = uint16(65535);        
     wall->CreateFixture(&boxy,0);
     
-    bodyDef.position.Set( length + 6.8f, y);
+    bodyDef.position.Set(5.8f + length, y);
     wall = world->CreateBody(&bodyDef);
-    boxy.SetAsBox(2.0f, 0.35f);
+    boxy.SetAsBox(5.0f, 0.35f);
     boxy.m_centroid.Set(0, 0 );
     
     fixtureDef.shape = &boxy;
@@ -385,7 +386,24 @@ enum {
 		//[self addNewSpriteWithCoords: location];
 	}
 }
-
+- (void)accelerometer:(UIAccelerometer*)accelerometer didAccelerate:(UIAcceleration*)acceleration
+{	
+	static float prevX=0, prevY=0;
+	
+	//#define kFilterFactor 0.05f
+#define kFilterFactor 1.0f	// don't use filter. the code is here just as an example
+	
+	float accelX = (float) acceleration.x * kFilterFactor + (1- kFilterFactor)*prevX;
+	float accelY = (float) acceleration.y * kFilterFactor + (1- kFilterFactor)*prevY;
+	
+	prevX = accelX;
+	prevY = accelY;
+    
+	b2Vec2 gravity(accelX * 10 * CC_CONTENT_SCALE_FACTOR(), accelY * 10 * CC_CONTENT_SCALE_FACTOR());
+    
+	world->SetGravity( gravity );
+}
+/*
 - (void)accelerometer:(UIAccelerometer*)accelerometer didAccelerate:(UIAcceleration*)acceleration
 {	
 	static float prevX=0, prevY=0;
@@ -401,10 +419,12 @@ enum {
 	
 	// accelerometer values are in "Portrait" mode. Change them to Landscape left
 	// multiply the gravity by 10
-	b2Vec2 gravity( -accelY * 10, accelX * 10);
+	//b2Vec2 gravity( -accelY * 10, accelX * 10);
+    b2Vec2 gravity( accelX * 10, accelY * 10); 
 	
 	world->SetGravity( gravity );
 }
+ */
 
 // on "dealloc" you need to release all your retained objects
 - (void) dealloc
