@@ -213,6 +213,11 @@ enum {
     
     ccTexParams params = {GL_LINEAR,GL_LINEAR,GL_REPEAT,GL_REPEAT};
     
+    ballSprite = [CCSprite spriteWithSpriteFrameName:@"blinkie1.png"];
+    ballSprite.position = ccp(length*32.0/2, y*32.0f);
+    [self addChild:ballSprite z:4 tag:11];
+    [ballSprite runAction:[self createBlinkAnim:YES]];
+    
     sprite= [[CCSprite alloc] initWithTexture:texture rect:CGRectMake(0, 0, length*64.0f, 0.35*64.0f)];
     [sprite.texture setTexParameters:&params];        
     [self addChild:sprite z:3 tag:33];
@@ -229,6 +234,11 @@ enum {
     fixtureDef.filter.categoryBits = uint16(65535);
     fixtureDef.filter.maskBits = uint16(65535);        
     wall->CreateFixture(&boxy,0);
+    
+    ballSprite = [CCSprite spriteWithSpriteFrameName:@"blinkie1.png"];
+    ballSprite.position = ccp((5.8f*32.0f)+ length*32.0/2, y*32.0f);
+    [self addChild:ballSprite z:4 tag:11];
+    [ballSprite runAction:[self createBlinkAnim:YES]];
     
     sprite= [[CCSprite alloc] initWithTexture:texture rect:CGRectMake(0, 0, 5.0f*64.0f, 0.35*64.0f)];
     [sprite.texture setTexParameters:&params];        
