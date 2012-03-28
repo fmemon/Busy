@@ -11,6 +11,9 @@
 		652A9A89152378A700D5C015 /* ball.png in Resources */ = {isa = PBXBuildFile; fileRef = 652A9A87152378A700D5C015 /* ball.png */; };
 		652A9AA41523B03000D5C015 /* GameOverScene.mm in Sources */ = {isa = PBXBuildFile; fileRef = 652A9AA31523B03000D5C015 /* GameOverScene.mm */; };
 		652A9AA71523B04B00D5C015 /* MyContactListener.mm in Sources */ = {isa = PBXBuildFile; fileRef = 652A9AA61523B04B00D5C015 /* MyContactListener.mm */; };
+		652A9AA91523BD6C00D5C015 /* bricks.png in Resources */ = {isa = PBXBuildFile; fileRef = 652A9AA81523BD6C00D5C015 /* bricks.png */; };
+		652A9AAC1523BDF100D5C015 /* rolly.png in Resources */ = {isa = PBXBuildFile; fileRef = 652A9AAA1523BDF100D5C015 /* rolly.png */; };
+		652A9AAD1523BDF100D5C015 /* rolly.plist in Resources */ = {isa = PBXBuildFile; fileRef = 652A9AAB1523BDF100D5C015 /* rolly.plist */; };
 		655EB8951522720C0079D711 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 655EB8941522720C0079D711 /* QuartzCore.framework */; };
 		655EB8971522720C0079D711 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 655EB8961522720C0079D711 /* OpenGLES.framework */; };
 		655EB8991522720C0079D711 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 655EB8981522720C0079D711 /* OpenAL.framework */; };
@@ -168,6 +171,7 @@
 		655EBA83152272E40079D711 /* GameSprites.png in Resources */ = {isa = PBXBuildFile; fileRef = 655EBA81152272E40079D711 /* GameSprites.png */; };
 		655EBA85152272EF0079D711 /* back.png in Resources */ = {isa = PBXBuildFile; fileRef = 655EBA84152272EF0079D711 /* back.png */; };
 		655EBA8B152276D30079D711 /* backL.png in Resources */ = {isa = PBXBuildFile; fileRef = 655EBA8A152276D30079D711 /* backL.png */; };
+		65F3726B1523C3C70049F14C /* brickssm.png in Resources */ = {isa = PBXBuildFile; fileRef = 65F3726A1523C3C70049F14C /* brickssm.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -177,6 +181,9 @@
 		652A9AA31523B03000D5C015 /* GameOverScene.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GameOverScene.mm; sourceTree = "<group>"; };
 		652A9AA51523B03D00D5C015 /* MyContactListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyContactListener.h; sourceTree = "<group>"; };
 		652A9AA61523B04B00D5C015 /* MyContactListener.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MyContactListener.mm; sourceTree = "<group>"; };
+		652A9AA81523BD6C00D5C015 /* bricks.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bricks.png; sourceTree = "<group>"; };
+		652A9AAA1523BDF100D5C015 /* rolly.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rolly.png; sourceTree = "<group>"; };
+		652A9AAB1523BDF100D5C015 /* rolly.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = rolly.plist; sourceTree = "<group>"; };
 		655EB8901522720C0079D711 /* Busy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Busy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		655EB8941522720C0079D711 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		655EB8961522720C0079D711 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -494,6 +501,7 @@
 		655EBA81152272E40079D711 /* GameSprites.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GameSprites.png; sourceTree = "<group>"; };
 		655EBA84152272EF0079D711 /* back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = back.png; sourceTree = "<group>"; };
 		655EBA8A152276D30079D711 /* backL.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = backL.png; sourceTree = "<group>"; };
+		65F3726A1523C3C70049F14C /* brickssm.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = brickssm.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -575,6 +583,10 @@
 		655EB8A51522720C0079D711 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				65F3726A1523C3C70049F14C /* brickssm.png */,
+				652A9AAA1523BDF100D5C015 /* rolly.png */,
+				652A9AAB1523BDF100D5C015 /* rolly.plist */,
+				652A9AA81523BD6C00D5C015 /* bricks.png */,
 				652A9A86152378A700D5C015 /* hole.png */,
 				652A9A87152378A700D5C015 /* ball.png */,
 				655EBA8A152276D30079D711 /* backL.png */,
@@ -1102,6 +1114,10 @@
 				655EBA8B152276D30079D711 /* backL.png in Resources */,
 				652A9A88152378A700D5C015 /* hole.png in Resources */,
 				652A9A89152378A700D5C015 /* ball.png in Resources */,
+				652A9AA91523BD6C00D5C015 /* bricks.png in Resources */,
+				652A9AAC1523BDF100D5C015 /* rolly.png in Resources */,
+				652A9AAD1523BDF100D5C015 /* rolly.plist in Resources */,
+				65F3726B1523C3C70049F14C /* brickssm.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

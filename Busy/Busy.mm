@@ -43,95 +43,7 @@ enum {
 	// return the scene
 	return scene;
 }
-/*
- // on "init" you need to initialize your instance
- -(id) init
- {
- // always call "super" init
- // Apple recommends to re-assign "self" with the "super" return value
- if( (self=[super init])) {
- 
- // enable touches
- self.isTouchEnabled = YES;
- 
- // enable accelerometer
- self.isAccelerometerEnabled = YES;
- 
- CGSize screenSize = [CCDirector sharedDirector].winSize;
- CCLOG(@"Screen width %0.2f screen height %0.2f",screenSize.width,screenSize.height);
- 
- // Define the gravity vector.
- b2Vec2 gravity;
- gravity.Set(0.0f, -10.0f);
- 
- // Do we want to let bodies sleep?
- // This will speed up the physics simulation
- bool doSleep = true;
- 
- // Construct a world object, which will hold and simulate the rigid bodies.
- world = new b2World(gravity, doSleep);
- 
- world->SetContinuousPhysics(true);
- 
- // Debug Draw functions
- m_debugDraw = new GLESDebugDraw( PTM_RATIO );
- world->SetDebugDraw(m_debugDraw);
- 
- uint32 flags = 0;
- flags += b2DebugDraw::e_shapeBit;
- //		flags += b2DebugDraw::e_jointBit;
- //		flags += b2DebugDraw::e_aabbBit;
- //		flags += b2DebugDraw::e_pairBit;
- //		flags += b2DebugDraw::e_centerOfMassBit;
- m_debugDraw->SetFlags(flags);		
- 
- 
- // Define the ground body.
- b2BodyDef groundBodyDef;
- groundBodyDef.position.Set(0, 0); // bottom-left corner
- 
- // Call the body factory which allocates memory for the ground body
- // from a pool and creates the ground box shape (also from a pool).
- // The body is also added to the world.
- b2Body* groundBody = world->CreateBody(&groundBodyDef);
- 
- // Define the ground box shape.
- b2PolygonShape groundBox;		
- 
- // bottom
- groundBox.SetAsEdge(b2Vec2(0,0), b2Vec2(screenSize.width/PTM_RATIO,0));
- groundBody->CreateFixture(&groundBox,0);
- 
- // top
- groundBox.SetAsEdge(b2Vec2(0,screenSize.height/PTM_RATIO), b2Vec2(screenSize.width/PTM_RATIO,screenSize.height/PTM_RATIO));
- groundBody->CreateFixture(&groundBox,0);
- 
- // left
- groundBox.SetAsEdge(b2Vec2(0,screenSize.height/PTM_RATIO), b2Vec2(0,0));
- groundBody->CreateFixture(&groundBox,0);
- 
- // right
- groundBox.SetAsEdge(b2Vec2(screenSize.width/PTM_RATIO,screenSize.height/PTM_RATIO), b2Vec2(screenSize.width/PTM_RATIO,0));
- groundBody->CreateFixture(&groundBox,0);
- 
- 
- //Set up sprite
- 
- CCSpriteBatchNode *batch = [CCSpriteBatchNode batchNodeWithFile:@"blocks.png" capacity:150];
- [self addChild:batch z:0 tag:kTagBatchNode];
- 
- [self addNewSpriteWithCoords:ccp(screenSize.width/2, screenSize.height/2)];
- 
- CCLabelTTF *label = [CCLabelTTF labelWithString:@"Tap screen" fontName:@"Marker Felt" fontSize:32];
- [self addChild:label z:0];
- [label setColor:ccc3(0,0,255)];
- label.position = ccp( screenSize.width/2, screenSize.height-50);
- 
- [self schedule: @selector(tick:)];
- }
- return self;
- }
- */
+
 
 -(id)init
 
@@ -140,58 +52,32 @@ enum {
     if( (self=[super init])) { 
         
         // enable touches
-        
         self.isTouchEnabled = YES; 
         
         // enable accelerometer
-        
         self.isAccelerometerEnabled = YES; 
         
         CGSize screenSize = [CCDirector sharedDirector].winSize;
-        
         CCLOG(@"Screen width %0.2f screen height %0.2f",screenSize.width,screenSize.height); 
         
         // Define the gravity vector.
-        
         b2Vec2 gravity;
-        
         gravity.Set(0.0f, -10.0f); 
-        
-        // Do we want to let bodies sleep?
-        
+            
         // This will speed up the physics simulation
-        
         bool doSleep = true; 
         
         // Construct a world object, which will hold and simulate the rigid bodies.
-        
         world = new b2World(gravity, doSleep); 
-        
         world->SetContinuousPhysics(true); 
         
         // Debug Draw functions
-        
         m_debugDraw = new GLESDebugDraw( PTM_RATIO );
-        
         world->SetDebugDraw(m_debugDraw); 
-        
         uint32 flags = 0;
-        
         flags += b2DebugDraw::e_shapeBit;
-        
-        //  flags += b2DebugDraw::e_jointBit;
-        
-        //  flags += b2DebugDraw::e_aabbBit;
-        
-        //  flags += b2DebugDraw::e_pairBit;
-        
-        //  flags += b2DebugDraw::e_centerOfMassBit;
-        
         m_debugDraw->SetFlags(flags);  
         
-        
-
-
         ground = NULL;
         b2BodyDef bd;
         ground = world->CreateBody(&bd);
@@ -231,10 +117,11 @@ enum {
         screenBoxShape.SetAsEdge(upperLeftCorner, upperRightCorner);
         containerBody->CreateFixture(&screenBoxShape, density);
         
-        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"GameSprites.plist"];
-        CCSpriteBatchNode*  spriteSheet = [CCSpriteBatchNode batchNodeWithFile:@"GameSprites.png"];
+        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"rolly.plist"];
+        CCSpriteBatchNode*  spriteSheet = [CCSpriteBatchNode batchNodeWithFile:@"rolly.png"];
         [self addChild:spriteSheet];
-        
+        [[CCTextureCache sharedTextureCache] addImage:@"brickssm.png" ]; 
+        texture = [[CCTextureCache sharedTextureCache] addImage:@"brickssm.png"];
         
         contactListener = new MyContactListener();
         world->SetContactListener(contactListener);
@@ -251,9 +138,32 @@ enum {
         [self schedule: @selector(tick:)]; 
         
     }
-    
     return self; 
+}
+
+- (CCAction*)createBlinkAnim:(BOOL)isTarget {
+    NSMutableArray *walkAnimFrames = [NSMutableArray array];
     
+    [walkAnimFrames addObject:[[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"blinkie1.png"]];
+    [walkAnimFrames addObject:[[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"blinkie2.png"]];
+    
+    CCAnimation *walkAnim = [CCAnimation animationWithFrames:walkAnimFrames delay:0.1f];
+    
+    CCAnimate *blink = [CCAnimate actionWithDuration:0.2f animation:walkAnim restoreOriginalFrame:YES];
+    
+    CCAction *walkAction = [CCRepeatForever actionWithAction:
+                            [CCSequence actions:
+                             [CCDelayTime actionWithDuration:CCRANDOM_0_1()*2.0f],
+                             blink,
+                             [CCDelayTime actionWithDuration:CCRANDOM_0_1()*3.0f],
+                             blink,
+                             [CCDelayTime actionWithDuration:CCRANDOM_0_1()*0.2f],
+                             blink,
+                             [CCDelayTime actionWithDuration:CCRANDOM_0_1()*2.0f],
+                             nil]
+                            ];
+    
+    return walkAction;
 }
 
 -(void)setupBoard {
@@ -265,13 +175,16 @@ enum {
     [self addChild:sprite z:-11];
     
     //circle1
-    sprite = [CCSprite spriteWithSpriteFrameName:@"ball.png"];
-    sprite.position = ccp(480.0f/2, 50/PTM_RATIO);
-    [self addChild:sprite z:1 tag:11];
-    bodyDef.userData = sprite;
+    //sprite = [CCSprite spriteWithSpriteFrameName:@"ball.png"];
+    ballSprite = [CCSprite spriteWithSpriteFrameName:@"blinkie1.png"];
+    ballSprite.position = ccp(480.0f/2, 50/PTM_RATIO);
+    [self addChild:ballSprite z:4 tag:11];
+    [ballSprite runAction:[self createBlinkAnim:YES]];
+
+    bodyDef.userData = ballSprite;
     bodyDef.position.Set(0.47f, 14.5f);
     ball = world->CreateBody(&bodyDef);
-    circleShape.m_radius = (sprite.contentSize.width / 32.0f) * 0.5f;
+    circleShape.m_radius = (ballSprite.contentSize.width / 32.0f) * 0.5f;
     fixtureDef.shape = &circleShape;
     fixtureDef.density = 5.0f*CC_CONTENT_SCALE_FACTOR();
     fixtureDef.friction = 0.0f;
@@ -279,14 +192,14 @@ enum {
     ball->CreateFixture(&fixtureDef);
         
     //Hole
-    sprite = [CCSprite spriteWithSpriteFrameName:@"hole.png"];
-    sprite.position = ccp(480.0f/2, 50/PTM_RATIO);
-    [self addChild:sprite z:-1 tag:88];
-    bodyDef.userData = sprite;
+    CCSprite *holeSprite = [CCSprite spriteWithSpriteFrameName:@"hole.png"];
+    holeSprite.position = ccp(480.0f/2, 50/PTM_RATIO);
+    [self addChild:holeSprite z:-1 tag:88];
+    bodyDef.userData = holeSprite;
     bodyDef.position.Set(5.0f, 1.2f);
     bodyDef.type = b2_staticBody;
     hole = world->CreateBody(&bodyDef);
-    circleShape.m_radius = (sprite.contentSize.width / 32.0f) * 0.05f;
+    circleShape.m_radius = (holeSprite.contentSize.width / 32.0f) * 0.05f;
     fixtureDef.shape = &circleShape;
     fixtureDef.density = 1.0f*CC_CONTENT_SCALE_FACTOR();
     fixtureDef.friction = 0.0f;
@@ -297,7 +210,13 @@ enum {
 
 
 -(void)createWall:(float)length where:(float)y {
-    //Hole
+    
+    ccTexParams params = {GL_LINEAR,GL_LINEAR,GL_REPEAT,GL_REPEAT};
+    
+    sprite= [[CCSprite alloc] initWithTexture:texture rect:CGRectMake(0, 0, length*64.0f, 0.35*64.0f)];
+    [sprite.texture setTexParameters:&params];        
+    [self addChild:sprite z:3 tag:33];
+    bodyDef1.userData = sprite;
     bodyDef1.type = b2_staticBody;
     bodyDef1.position.Set(0.0f, y);
     b2Body* wall = world->CreateBody(&bodyDef1);
@@ -311,6 +230,10 @@ enum {
     fixtureDef.filter.maskBits = uint16(65535);        
     wall->CreateFixture(&boxy,0);
     
+    sprite= [[CCSprite alloc] initWithTexture:texture rect:CGRectMake(0, 0, 5.0f*64.0f, 0.35*64.0f)];
+    [sprite.texture setTexParameters:&params];        
+    [self addChild:sprite z:3 tag:33];
+    bodyDef1.userData = sprite;
     bodyDef1.position.Set(5.8f + length, y);
     wall = world->CreateBody(&bodyDef1);
     boxy.SetAsBox(5.0f, 0.35f);    

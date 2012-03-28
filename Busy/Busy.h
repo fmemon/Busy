@@ -30,8 +30,10 @@
     b2Body* ball;
     b2Body* hole;
     CCSprite *sprite;
+    CCSprite *ballSprite;
     
     MyContactListener *contactListener;
+    CCTexture2D *texture;
 }
 
 // returns a CCScene that contains the Busy as the only child
@@ -39,5 +41,6 @@
 
 -(void)setupBoard;
 -(void)createWall:(float)length where:(float)y;
+- (CCAction*)createBlinkAnim:(BOOL)isTarget;
 
 @end
