@@ -9,6 +9,8 @@
 
 // Import the interfaces
 #import "Busy.h"
+#import "GameOverScene.h"
+#import "MyContactListener.h"
 
 //Pixel to metres ratio. Box2D uses metres as the unit for measurement.
 //This ratio defines how many pixels correspond to 1 Box2D "metre"
@@ -234,6 +236,9 @@ enum {
         [self addChild:spriteSheet];
         
         
+        contactListener = new MyContactListener();
+        world->SetContactListener(contactListener);
+        
         [self setupBoard];
         
         [self createWall:3.3f where:13.5f];
@@ -276,11 +281,11 @@ enum {
     //Hole
     sprite = [CCSprite spriteWithSpriteFrameName:@"hole.png"];
     sprite.position = ccp(480.0f/2, 50/PTM_RATIO);
-    [self addChild:sprite z:1 tag:11];
+    [self addChild:sprite z:-1 tag:88];
     bodyDef.userData = sprite;
     bodyDef.position.Set(5.0f, 1.2f);
     bodyDef.type = b2_staticBody;
-    b2Body* hole = world->CreateBody(&bodyDef);
+    hole = world->CreateBody(&bodyDef);
     circleShape.m_radius = (sprite.contentSize.width / 32.0f) * 0.05f;
     fixtureDef.shape = &circleShape;
     fixtureDef.density = 1.0f*CC_CONTENT_SCALE_FACTOR();
@@ -293,16 +298,9 @@ enum {
 
 -(void)createWall:(float)length where:(float)y {
     //Hole
-    //sprite = [CCSprite spriteWithSpriteFrameName:@"hole.png"];
-    //sprite.position = ccp(480.0f/2, 50/PTM_RATIO);
-    //[self addChild:sprite z:1 tag:11];
-    //bodyDef.userData = sprite;
-    
-    bodyDef.type = b2_staticBody;
-    //bodyDef.position.Set(length, y);
-    bodyDef.position.Set(0.0f, y);
-    //bodyDef.angle = -0.222508f;
-    b2Body* wall = world->CreateBody(&bodyDef);
+    bodyDef1.type = b2_staticBody;
+    bodyDef1.position.Set(0.0f, y);
+    b2Body* wall = world->CreateBody(&bodyDef1);
     boxy.SetAsBox(length, 0.35f);
     fixtureDef.shape = &boxy;
     fixtureDef.density = 0.015000f;
@@ -313,11 +311,9 @@ enum {
     fixtureDef.filter.maskBits = uint16(65535);        
     wall->CreateFixture(&boxy,0);
     
-    bodyDef.position.Set(5.8f + length, y);
-    wall = world->CreateBody(&bodyDef);
-    boxy.SetAsBox(5.0f, 0.35f);
-    boxy.m_centroid.Set(0, 0 );
-    
+    bodyDef1.position.Set(5.8f + length, y);
+    wall = world->CreateBody(&bodyDef1);
+    boxy.SetAsBox(5.0f, 0.35f);    
     fixtureDef.shape = &boxy;
     fixtureDef.density = 0.015000f;
     fixtureDef.friction = 0.300000f;
@@ -373,6 +369,33 @@ enum {
 			myActor.rotation = -1 * CC_RADIANS_TO_DEGREES(b->GetAngle());
 		}	
 	}
+    // Loop through all of the box2d bodies that are currently colliding, that we have
+    // gathered with our custom contact listener...
+    std::vector<MyContact>::iterator pos2;
+    for(pos2 = contactListener->_contacts.begin(); pos2 != contactListener->_contacts.end(); ++pos2) {
+        MyContact contact = *pos2;
+        
+        // Get the box2d bodies for each object
+        b2Body *bodyA = contact.fixtureA->GetBody();
+        b2Body *bodyB = contact.fixtureB->GetBody();
+        if (bodyA->GetUserData() != NULL && bodyB->GetUserData() != NULL) {
+            CCSprite *spriteA = (CCSprite *) bodyA->GetUserData();
+            CCSprite *spriteB = (CCSprite *) bodyB->GetUserData();
+            
+            // Is sprite A a cat and sprite B a car?
+            if (spriteA.tag == 88 && spriteB.tag == 11) {
+                NSLog(@"Game Ended");
+                [[CCDirector sharedDirector] replaceScene:[GameOverScene node]];
+                
+            }
+            // Is sprite A a car and sprite B a cat?
+            else if (spriteA.tag == 11 && spriteB.tag == 88) {
+                NSLog(@"Game Ended");
+                [[CCDirector sharedDirector] replaceScene:[GameOverScene node]];
+                
+            }
+        }
+    }
 }
 
 - (void)ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event

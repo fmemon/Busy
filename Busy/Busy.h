@@ -10,7 +10,8 @@
 #import "cocos2d.h"
 #import "Box2D.h"
 #import "GLES-Render.h"
-//#import "MyContactListener.h"
+#import "MyContactListener.h"
+
 //#import "MusicHandler.h"
 
 // Busy
@@ -19,7 +20,7 @@
 	b2World* world;
 	GLESDebugDraw *m_debugDraw;
     
-    b2BodyDef bodyDef;
+    b2BodyDef bodyDef,bodyDef1;
     b2Body* ground;
     b2Vec2 initVel;
     b2CircleShape circleShape;
@@ -27,8 +28,10 @@
     b2FixtureDef fixtureDef;        
     b2PolygonShape boxy;
     b2Body* ball;
-    
+    b2Body* hole;
     CCSprite *sprite;
+    
+    MyContactListener *contactListener;
 }
 
 // returns a CCScene that contains the Busy as the only child

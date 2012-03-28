@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		652A9A88152378A700D5C015 /* hole.png in Resources */ = {isa = PBXBuildFile; fileRef = 652A9A86152378A700D5C015 /* hole.png */; };
 		652A9A89152378A700D5C015 /* ball.png in Resources */ = {isa = PBXBuildFile; fileRef = 652A9A87152378A700D5C015 /* ball.png */; };
+		652A9AA41523B03000D5C015 /* GameOverScene.mm in Sources */ = {isa = PBXBuildFile; fileRef = 652A9AA31523B03000D5C015 /* GameOverScene.mm */; };
+		652A9AA71523B04B00D5C015 /* MyContactListener.mm in Sources */ = {isa = PBXBuildFile; fileRef = 652A9AA61523B04B00D5C015 /* MyContactListener.mm */; };
 		655EB8951522720C0079D711 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 655EB8941522720C0079D711 /* QuartzCore.framework */; };
 		655EB8971522720C0079D711 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 655EB8961522720C0079D711 /* OpenGLES.framework */; };
 		655EB8991522720C0079D711 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 655EB8981522720C0079D711 /* OpenAL.framework */; };
@@ -171,6 +173,10 @@
 /* Begin PBXFileReference section */
 		652A9A86152378A700D5C015 /* hole.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hole.png; sourceTree = "<group>"; };
 		652A9A87152378A700D5C015 /* ball.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ball.png; sourceTree = "<group>"; };
+		652A9AA21523B02200D5C015 /* GameOverScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameOverScene.h; sourceTree = "<group>"; };
+		652A9AA31523B03000D5C015 /* GameOverScene.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GameOverScene.mm; sourceTree = "<group>"; };
+		652A9AA51523B03D00D5C015 /* MyContactListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyContactListener.h; sourceTree = "<group>"; };
+		652A9AA61523B04B00D5C015 /* MyContactListener.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MyContactListener.mm; sourceTree = "<group>"; };
 		655EB8901522720C0079D711 /* Busy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Busy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		655EB8941522720C0079D711 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		655EB8961522720C0079D711 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -544,6 +550,10 @@
 		655EB8A41522720C0079D711 /* Busy */ = {
 			isa = PBXGroup;
 			children = (
+				652A9AA21523B02200D5C015 /* GameOverScene.h */,
+				652A9AA31523B03000D5C015 /* GameOverScene.mm */,
+				652A9AA51523B03D00D5C015 /* MyContactListener.h */,
+				652A9AA61523B04B00D5C015 /* MyContactListener.mm */,
 				655EBA7D1522723C0079D711 /* Busy.h */,
 				655EBA7E1522724D0079D711 /* Busy.mm */,
 				655EBA69152272150079D711 /* AppDelegate.h */,
@@ -1237,6 +1247,8 @@
 				655EBA71152272150079D711 /* HelloWorldLayer.mm in Sources */,
 				655EBA74152272150079D711 /* GLES-Render.mm in Sources */,
 				655EBA7F1522724D0079D711 /* Busy.mm in Sources */,
+				652A9AA41523B03000D5C015 /* GameOverScene.mm in Sources */,
+				652A9AA71523B04B00D5C015 /* MyContactListener.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
