@@ -117,8 +117,8 @@ enum {
         screenBoxShape.SetAsEdge(upperLeftCorner, upperRightCorner);
         containerBody->CreateFixture(&screenBoxShape, density);
         
-        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"rolly.plist"];
-        CCSpriteBatchNode*  spriteSheet = [CCSpriteBatchNode batchNodeWithFile:@"rolly.png"];
+        [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"bally.plist"];
+        CCSpriteBatchNode*  spriteSheet = [CCSpriteBatchNode batchNodeWithFile:@"bally.png"];
         [self addChild:spriteSheet];
         [[CCTextureCache sharedTextureCache] addImage:@"brickssm.png" ]; 
         texture = [[CCTextureCache sharedTextureCache] addImage:@"brickssm.png"];
@@ -165,6 +165,32 @@ enum {
     
     return walkAction;
 }
+
+- (CCAction*)createEyesBlinkAnim:(BOOL)isTarget {
+    NSMutableArray *walkAnimFrames = [NSMutableArray array];
+    
+    [walkAnimFrames addObject:[[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"eyesA1.png"]];
+    [walkAnimFrames addObject:[[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"eyesA2.png"]];
+    
+    CCAnimation *walkAnim = [CCAnimation animationWithFrames:walkAnimFrames delay:0.1f];
+    
+    CCAnimate *blink = [CCAnimate actionWithDuration:0.2f animation:walkAnim restoreOriginalFrame:YES];
+    
+    CCAction *walkAction = [CCRepeatForever actionWithAction:
+                            [CCSequence actions:
+                             [CCDelayTime actionWithDuration:CCRANDOM_0_1()*2.0f],
+                             blink,
+                             [CCDelayTime actionWithDuration:CCRANDOM_0_1()*3.0f],
+                             blink,
+                             [CCDelayTime actionWithDuration:CCRANDOM_0_1()*0.2f],
+                             blink,
+                             [CCDelayTime actionWithDuration:CCRANDOM_0_1()*2.0f],
+                             nil]
+                            ];
+    
+    return walkAction;
+}
+
 
 -(void)setupBoard {
     
@@ -213,10 +239,10 @@ enum {
     
     ccTexParams params = {GL_LINEAR,GL_LINEAR,GL_REPEAT,GL_REPEAT};
     
-    ballSprite = [CCSprite spriteWithSpriteFrameName:@"blinkie1.png"];
+    ballSprite = [CCSprite spriteWithSpriteFrameName:@"eyesA1.png"];
     ballSprite.position = ccp(length*32.0/2, y*32.0f);
     [self addChild:ballSprite z:4 tag:11];
-    [ballSprite runAction:[self createBlinkAnim:YES]];
+    [ballSprite runAction:[self createEyesBlinkAnim:YES]];
     
     sprite= [[CCSprite alloc] initWithTexture:texture rect:CGRectMake(0, 0, length*64.0f, 0.35*64.0f)];
     [sprite.texture setTexParameters:&params];        
@@ -235,10 +261,10 @@ enum {
     fixtureDef.filter.maskBits = uint16(65535);        
     wall->CreateFixture(&boxy,0);
     
-    ballSprite = [CCSprite spriteWithSpriteFrameName:@"blinkie1.png"];
+    ballSprite = [CCSprite spriteWithSpriteFrameName:@"eyesA1.png"];
     ballSprite.position = ccp((5.8f*32.0f)+ length*32.0/2, y*32.0f);
     [self addChild:ballSprite z:4 tag:11];
-    [ballSprite runAction:[self createBlinkAnim:YES]];
+    [ballSprite runAction:[self createEyesBlinkAnim:YES]];
     
     sprite= [[CCSprite alloc] initWithTexture:texture rect:CGRectMake(0, 0, 5.0f*64.0f, 0.35*64.0f)];
     [sprite.texture setTexParameters:&params];        

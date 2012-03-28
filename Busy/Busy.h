@@ -42,5 +42,6 @@
 -(void)setupBoard;
 -(void)createWall:(float)length where:(float)y;
 - (CCAction*)createBlinkAnim:(BOOL)isTarget;
+- (CCAction*)createEyesBlinkAnim:(BOOL)isTarget;
 
 @end
