@@ -42,7 +42,11 @@
     
     BOOL muted;
     BOOL stopWater;
- 
+    b2Fixture *_leftFixture;
+    b2Fixture *_rightFixture;
+    b2Fixture * _ballFixture;
+    NSArray *walls;
+
 }
 
 // returns a CCScene that contains the Busy as the only child

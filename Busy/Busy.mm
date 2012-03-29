@@ -61,7 +61,7 @@ enum {
         //CCLOG(@"Screen width %0.2f screen height %0.2f",screenSize.width,screenSize.height); 
         
         //initial settings
-        score  = 0;
+        score  = 1000;
         highscore = 0;
         stopWater = TRUE;
         muted = FALSE;
@@ -110,11 +110,12 @@ enum {
         
         // left side
         screenBoxShape.SetAsEdge(upperLeftCorner, lowerLeftCorner);
-        containerBody->CreateFixture(&screenBoxShape, density);
+        _leftFixture =containerBody->CreateFixture(&screenBoxShape, density);
         
         // right side
         screenBoxShape.SetAsEdge(upperRightCorner, lowerRightCorner);
-        containerBody->CreateFixture(&screenBoxShape, density);
+        _rightFixture =containerBody->CreateFixture(&screenBoxShape, density);
+        
         
         // bottom
         screenBoxShape.SetAsEdge(lowerLeftCorner, lowerRightCorner);
@@ -125,6 +126,9 @@ enum {
         containerBody->CreateFixture(&screenBoxShape, density);
         
         
+        walls = [[NSArray alloc] initWithObjects: 
+                 [NSValue valueWithPointer:_leftFixture],
+                 [NSValue valueWithPointer:_rightFixture], nil];
         
         //show scores
         highscoreLabel = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"HighScore: %i",highscore] fontName:@"Arial" fontSize:24];
@@ -183,7 +187,7 @@ enum {
         float Yinit = 2.0;
         
 
-        for (int i = 0; i <6; i++) {
+        for (int i = 0; i <4; i++) {
              if (i < 5)[self createWall:Xinit + (i *Xdelta) where:Yinit + (i*Ydelta)];
              else         [self createWall:3.3f where:Yinit + (5*Ydelta)];
         }
@@ -263,18 +267,19 @@ enum {
     //sprite = [CCSprite spriteWithSpriteFrameName:@"ball.png"];
     ballSprite = [CCSprite spriteWithSpriteFrameName:@"blinkie1.png"];
     ballSprite.position = ccp(480.0f/2, 50/PTM_RATIO);
+    ballSprite.scale =0.8;
     [self addChild:ballSprite z:4 tag:11];
     [ballSprite runAction:[self createBlinkAnim:YES]];
 
     bodyDef.userData = ballSprite;
-    bodyDef.position.Set(0.47f, 14.5f);
+    bodyDef.position.Set(1.47f, 14.5f);
     ball = world->CreateBody(&bodyDef);
-    circleShape.m_radius = (ballSprite.contentSize.width / 32.0f) * 0.5f;
+    circleShape.m_radius = (ballSprite.contentSize.width / 32.0f) * 0.3f;
     fixtureDef.shape = &circleShape;
     fixtureDef.density = 5.0f*CC_CONTENT_SCALE_FACTOR();
     fixtureDef.friction = 0.0f;
     fixtureDef.restitution = 0.4f;
-    ball->CreateFixture(&fixtureDef);
+    _ballFixture = ball->CreateFixture(&fixtureDef);
         
     //Hole
     CCSprite *holeSprite = [CCSprite spriteWithSpriteFrameName:@"hole.png"];
@@ -344,13 +349,14 @@ enum {
 }
 
 - (void)scored:(b2Body*)bodyB {
-    [MusicHandler playBounce];
-    score += 15;
+    //[MusicHandler playBounce];
+    score -= 155;
     [self updateScore];
 }
 
 - (void)endGame:(b2Body*)bodyB {
-    if (stopWater) {[MusicHandler playWater];
+    if (stopWater) {
+        //[MusicHandler playWater];
         stopWater = FALSE;
         bodyB->SetLinearVelocity(b2Vec2(0,0));
         bodyB->SetAngularVelocity(0);
@@ -484,6 +490,24 @@ enum {
             }
             
         }
+        
+        for (NSData *fixtureData in walls)
+        {
+            b2Fixture *fixture;
+            fixture = (b2Fixture*)[fixtureData pointerValue];
+            
+            if ((contact.fixtureA == _leftFixture   && contact.fixtureB == _ballFixture) ||
+                (contact.fixtureA == _ballFixture && contact.fixtureB == _leftFixture  )) {
+                // NSLog(@"Ball hit bottom!");
+                    [self scored:bodyA];
+            } else if ((contact.fixtureA == _rightFixture   && contact.fixtureB == _ballFixture) ||
+                                   (contact.fixtureA == _ballFixture && contact.fixtureB == _rightFixture  )) {
+                // NSLog(@"Ball hit bottom!");
+                [self scored:bodyA];
+            } 
+        } 
+
+        
     }
     
     
@@ -517,28 +541,6 @@ enum {
     
 	world->SetGravity( gravity );
 }
-/*
-- (void)accelerometer:(UIAccelerometer*)accelerometer didAccelerate:(UIAcceleration*)acceleration
-{	
-	static float prevX=0, prevY=0;
-	
-	//#define kFilterFactor 0.05f
-#define kFilterFactor 1.0f	// don't use filter. the code is here just as an example
-	
-	float accelX = (float) acceleration.x * kFilterFactor + (1- kFilterFactor)*prevX;
-	float accelY = (float) acceleration.y * kFilterFactor + (1- kFilterFactor)*prevY;
-	
-	prevX = accelX;
-	prevY = accelY;
-	
-	// accelerometer values are in "Portrait" mode. Change them to Landscape left
-	// multiply the gravity by 10
-	//b2Vec2 gravity( -accelY * 10, accelX * 10);
-    b2Vec2 gravity( accelX * 10, accelY * 10); 
-	
-	world->SetGravity( gravity );
-}
- */
 
 // on "dealloc" you need to release all your retained objects
 - (void) dealloc
