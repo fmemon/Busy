@@ -420,7 +420,7 @@ static inline float mtp(float d)
 
 - (void)endGame:(b2Body*)bodyB {
     if (stopWater) {
-        //[MusicHandler playWater];
+        [MusicHandler playExit];
          stopWater = FALSE;
         bodyB->SetLinearVelocity(b2Vec2(0,0));
         bodyB->SetAngularVelocity(0);
@@ -433,7 +433,7 @@ static inline float mtp(float d)
 
 - (void)restartGame:(b2Body*)bodyB {
     if (stopWater) {
-        //[MusicHandler playWater];
+        [MusicHandler playReset];
        // stopWater = FALSE;
         bodyB->SetLinearVelocity(b2Vec2(0,0));
         bodyB->SetAngularVelocity(0);
@@ -697,7 +697,15 @@ static inline float mtp(float d)
 	prevX = accelX;
 	prevY = accelY;
     
-	b2Vec2 gravity(accelX * 10 * CC_CONTENT_SCALE_FACTOR(), accelY * 10 * CC_CONTENT_SCALE_FACTOR());
+    int accXFactor = 10;
+    int accYFactor = 10;
+    
+    if (score != 0 && score > 500 && score < 50000) {
+        accYFactor = score/100;
+        accXFactor = score/100;
+    }
+    
+	b2Vec2 gravity(accelX * accXFactor * CC_CONTENT_SCALE_FACTOR(), accelY * accYFactor * CC_CONTENT_SCALE_FACTOR());
     
 	world->SetGravity( gravity );
 }

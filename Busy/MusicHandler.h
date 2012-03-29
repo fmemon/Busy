@@ -14,5 +14,8 @@
 +(void) preload;
 +(void) playWater;
 +(void) playBounce;
++(void) playReset;
++(void) playExit;
 
+    
 @end
