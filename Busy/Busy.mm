@@ -145,7 +145,7 @@ enum {
         [self addChild:highscoreLabel z:10];
         
         scoreLabel = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"       Score: %i",score] fontName:@"Arial" fontSize:24];
-        scoreLabel.position = ccp(180.0f, 465.0f);
+        scoreLabel.position = ccp(180.0f, 445.0f);
         scoreLabel.color = ccc3(26, 46, 149);
         [self addChild:scoreLabel z:10];
         
@@ -181,23 +181,25 @@ enum {
         [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"bally.plist"];
         CCSpriteBatchNode*  spriteSheet = [CCSpriteBatchNode batchNodeWithFile:@"bally.png"];
         [self addChild:spriteSheet];
-        [[CCTextureCache sharedTextureCache] addImage:@"brickssm.png" ]; 
-        texture = [[CCTextureCache sharedTextureCache] addImage:@"brickssm.png"];
+        [[CCTextureCache sharedTextureCache] addImage:@"bricks.png" ]; 
+        texture = [[CCTextureCache sharedTextureCache] addImage:@"bricks.png"];
         
         contactListener = new MyContactListener();
         world->SetContactListener(contactListener);
         
         [self setupBoard];
         
-        float Xdelta = 1.0f;
+        float Xdelta = 2.0;
         float Ydelta = 2.0f;
         float Xinit = 2.3f;
         float Yinit = 2.0;
         
 
         for (int i = 0; i <7; i++) {
-             if (i < 5)[self createWall:Xinit + (i *Xdelta) where:Yinit + (i*Ydelta)];
-             else         [self createWall:3.3f where:Yinit + (5*Ydelta)];
+            //if (i < 5)[self createWall:Xinit + (i *Xdelta) where:Yinit + (i*Ydelta)];
+            //else         [self createWall:Xinit +1.0f where:Yinit + (5*Ydelta)];
+           if (i < 5)[self createWall:Xinit + (arc4random()% 7) where:Yinit + (i*Ydelta)];
+            else         [self createWall:Xinit +arc4random() % 1 where:Yinit + (5*Ydelta)];
         }
     /*    [self createWall:3.3f where:13.5f];
         [self createWall:3.3f where:11.5f];
@@ -265,12 +267,12 @@ enum {
 
 -(void)setupBoard {
     
-    //background
+/*    //background
     sprite = [CCSprite spriteWithFile:@"back.png"];
     sprite.anchorPoint = CGPointZero;
     sprite.position = CGPointZero;
     [self addChild:sprite z:-11];
-    
+  */  
     //circle1
     //sprite = [CCSprite spriteWithSpriteFrameName:@"ball.png"];
     ballSprite = [CCSprite spriteWithSpriteFrameName:@"blinkie1.png"];
@@ -312,14 +314,15 @@ enum {
     ccTexParams params = {GL_LINEAR,GL_LINEAR,GL_REPEAT,GL_REPEAT};
     
     ballSprite = [CCSprite spriteWithSpriteFrameName:@"eyesA1.png"];
-    ballSprite.position = ccp(length*32.0/2, y*32.0f);
+    ballSprite.position = ccp(((arc4random() % 3) + (length-2.0)*32.0)/2, y*32.0f);
     [self addChild:ballSprite z:4 tag:11];
     [ballSprite runAction:[self createEyesBlinkAnim:YES]];
     
-    sprite= [[CCSprite alloc] initWithTexture:texture rect:CGRectMake(0, 0, length*64.0f, 0.35*64.0f)];
+   /* sprite= [[CCSprite alloc] initWithTexture:texture rect:CGRectMake(0, 0, length*64.0f, 0.35*64.0f)];
     [sprite.texture setTexParameters:&params];        
     [self addChild:sprite z:3 tag:33];
     bodyDef1.userData = sprite;
+    */
     bodyDef1.type = b2_staticBody;
     bodyDef1.position.Set(0.0f, y);
     b2Body* wall = world->CreateBody(&bodyDef1);
@@ -334,15 +337,17 @@ enum {
     wall->CreateFixture(&boxy,0);
     
     ballSprite = [CCSprite spriteWithSpriteFrameName:@"eyesA1.png"];
-    ballSprite.position = ccp((5.8f*32.0f)+ length*32.0/2, y*32.0f);
+    //ballSprite.position = ccp((5.8f*32.0f)+ length*32.0/2, y*32.0f);
+    ballSprite.position = ccp((((arc4random() % 4) + 1.8f)*32.0f)+ length*32.0/2, y*32.0f);
     [self addChild:ballSprite z:4 tag:11];
     [ballSprite runAction:[self createEyesBlinkAnim:YES]];
     
-    sprite= [[CCSprite alloc] initWithTexture:texture rect:CGRectMake(0, 0, 5.0f*64.0f, 0.35*64.0f)];
+    /* sprite= [[CCSprite alloc] initWithTexture:texture rect:CGRectMake(0, 0, 5.0f*64.0f, 0.35*64.0f)];
     [sprite.texture setTexParameters:&params];        
     [self addChild:sprite z:3 tag:33];
     bodyDef1.userData = sprite;
-    bodyDef1.position.Set(5.8f + length, y);
+    */
+     bodyDef1.position.Set(5.8f + length, y);
     wall = world->CreateBody(&bodyDef1);
     boxy.SetAsBox(5.0f, 0.35f);    
     fixtureDef.shape = &boxy;
