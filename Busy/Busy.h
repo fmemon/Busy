@@ -11,8 +11,7 @@
 #import "Box2D.h"
 #import "GLES-Render.h"
 #import "MyContactListener.h"
-
-//#import "MusicHandler.h"
+#import "MusicHandler.h"
 
 // Busy
 @interface Busy : CCLayer
@@ -34,6 +33,16 @@
     
     MyContactListener *contactListener;
     CCTexture2D *texture;
+    int score;
+    int highscore;
+    CCLabelTTF *highscoreLabel;
+    CCLabelTTF *scoreLabel;
+
+    CCMenuItemToggle *pause;
+    
+    BOOL muted;
+    BOOL stopWater;
+ 
 }
 
 // returns a CCScene that contains the Busy as the only child
@@ -43,5 +52,10 @@
 -(void)createWall:(float)length where:(float)y;
 - (CCAction*)createBlinkAnim:(BOOL)isTarget;
 - (CCAction*)createEyesBlinkAnim:(BOOL)isTarget;
+- (void)turnOnMusic;
+- (void)restoreData;
+- (void)updateScore;
+- (void)saveData;
+- (void)scored:(b2Body*)bodyB;
 
 @end

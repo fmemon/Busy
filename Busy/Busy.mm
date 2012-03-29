@@ -58,7 +58,14 @@ enum {
         self.isAccelerometerEnabled = YES; 
         
         CGSize screenSize = [CCDirector sharedDirector].winSize;
-        CCLOG(@"Screen width %0.2f screen height %0.2f",screenSize.width,screenSize.height); 
+        //CCLOG(@"Screen width %0.2f screen height %0.2f",screenSize.width,screenSize.height); 
+        
+        //initial settings
+        score  = 0;
+        highscore = 0;
+        stopWater = TRUE;
+        muted = FALSE;
+        [self restoreData];
         
         // Define the gravity vector.
         b2Vec2 gravity;
@@ -117,6 +124,48 @@ enum {
         screenBoxShape.SetAsEdge(upperLeftCorner, upperRightCorner);
         containerBody->CreateFixture(&screenBoxShape, density);
         
+        
+        
+        //show scores
+        highscoreLabel = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"HighScore: %i",highscore] fontName:@"Arial" fontSize:24];
+        highscoreLabel.color = ccc3(26, 46, 149);
+        highscoreLabel.position = ccp(180.0f, 470.0f);
+        [self addChild:highscoreLabel z:10];
+        
+        scoreLabel = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"       Score: %i",score] fontName:@"Arial" fontSize:24];
+        scoreLabel.position = ccp(180.0f, 450.0f);
+        scoreLabel.color = ccc3(26, 46, 149);
+        [self addChild:scoreLabel z:10];
+        
+        
+        // Preload effect
+        [MusicHandler preload];
+        
+        [[CCTouchDispatcher sharedDispatcher] addTargetedDelegate:self priority:0 swallowsTouches:YES];
+        
+        //Pause Toggle can not sure frame cache for sprites!!!!!
+		CCMenuItemSprite *playItem = [CCMenuItemSprite itemFromNormalSprite:[CCSprite spriteWithFile:@"newPauseON.png"]
+                                                             selectedSprite:[CCSprite spriteWithFile:@"newPauseONSelect.png"]];
+        
+		CCMenuItemSprite *pauseItem = [CCMenuItemSprite itemFromNormalSprite:[CCSprite spriteWithFile:@"newPauseOFF.png"]
+                                                              selectedSprite:[CCSprite spriteWithFile:@"newPauseOFFSelect.png"]];
+        
+		if (!muted)  {
+            pause = [CCMenuItemToggle itemWithTarget:self selector:@selector(turnOnMusic)items:playItem, pauseItem, nil];
+            pause.position = ccp(screenSize.width*0.03, screenSize.height*0.95f);
+        }
+        else {
+            pause = [CCMenuItemToggle itemWithTarget:self selector:@selector(turnOnMusic)items:pauseItem, playItem, nil];
+            pause.position = ccp(screenSize.width*0.03, screenSize.height*0.95f);
+        }
+        
+		//Create Menu with the items created before
+		CCMenu *menu = [CCMenu menuWithItems:pause, nil];
+		menu.position = CGPointMake(10.0f, 7.5f);
+		[self addChild:menu z:11];
+
+        
+        
         [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"bally.plist"];
         CCSpriteBatchNode*  spriteSheet = [CCSpriteBatchNode batchNodeWithFile:@"bally.png"];
         [self addChild:spriteSheet];
@@ -128,13 +177,23 @@ enum {
         
         [self setupBoard];
         
-        [self createWall:3.3f where:13.5f];
+        float Xdelta = 2.0f;
+        float Ydelta = 2.0f;
+        float Xinit = 2.3f;
+        float Yinit = 2.0;
+        
+
+        for (int i = 0; i <6; i++) {
+             if (i < 5)[self createWall:Xinit + (i *Xdelta) where:Yinit + (i*Ydelta)];
+             else         [self createWall:3.3f where:Yinit + (5*Ydelta)];
+        }
+    /*    [self createWall:3.3f where:13.5f];
         [self createWall:3.3f where:11.5f];
         [self createWall:2.3f where:9.5f];
         [self createWall:4.3f where:7.5f];
         [self createWall:6.3f where:5.5f];
         [self createWall:8.3f where:3.5f];
-        
+      */  
         [self schedule: @selector(tick:)]; 
         
     }
@@ -222,7 +281,7 @@ enum {
     holeSprite.position = ccp(480.0f/2, 50/PTM_RATIO);
     [self addChild:holeSprite z:-1 tag:88];
     bodyDef.userData = holeSprite;
-    bodyDef.position.Set(5.0f, 1.2f);
+    bodyDef.position.Set(5.0f, 0.5f);
     bodyDef.type = b2_staticBody;
     hole = world->CreateBody(&bodyDef);
     circleShape.m_radius = (holeSprite.contentSize.width / 32.0f) * 0.05f;
@@ -283,6 +342,76 @@ enum {
     wall->CreateFixture(&boxy,0);
 
 }
+
+- (void)scored:(b2Body*)bodyB {
+    [MusicHandler playBounce];
+    score += 15;
+    [self updateScore];
+}
+
+- (void)endGame:(b2Body*)bodyB {
+    if (stopWater) {[MusicHandler playWater];
+        stopWater = FALSE;
+        bodyB->SetLinearVelocity(b2Vec2(0,0));
+        bodyB->SetAngularVelocity(0);
+        
+        [self saveData];
+        [self performSelector:@selector(gotoHS) withObject:nil afterDelay:0.3];
+    }
+}
+
+- (void)gotoHS {
+    [[CCDirector sharedDirector] replaceScene:[GameOverScene node]];
+}
+
+- (void)updateScore {
+    [scoreLabel setString:[NSString stringWithFormat:@"       Score: %i",score]];
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setInteger:score forKey:@"score"];
+    [defaults synchronize];
+    
+    
+}
+- (void)saveData {   
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setInteger:score forKey:@"newHS"];
+    
+    [defaults synchronize];
+}
+- (void)restoreData {
+    // Get the stored data before the view loads
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    if ([defaults integerForKey:@"HS1"]) {
+        highscore = [defaults integerForKey:@"HS1"];
+        [highscoreLabel setString:[NSString stringWithFormat:@"HighScore: %i",highscore]];
+    }
+    
+    
+    if ([defaults boolForKey:@"IsMuted"]) {
+        muted = [defaults boolForKey:@"IsMuted"];
+        [[SimpleAudioEngine sharedEngine] setMute:muted];
+    }
+}
+
+- (void)turnOnMusic {
+    if ([[SimpleAudioEngine sharedEngine] mute]) {
+        // This will unmute the sound
+        muted = FALSE;
+    }
+    else {
+        //This will mute the sound
+        muted = TRUE;
+    }
+    [[SimpleAudioEngine sharedEngine] setMute:muted];
+    
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setBool:muted forKey:@"IsMuted"];
+    [defaults synchronize];
+}
+
 
 -(void) draw
 {
@@ -353,8 +482,11 @@ enum {
                 [[CCDirector sharedDirector] replaceScene:[GameOverScene node]];
                 
             }
+            
         }
     }
+    
+    
 }
 
 - (void)ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
