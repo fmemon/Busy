@@ -53,6 +53,9 @@
     BOOL level4;
     BOOL level5;
     BOOL level6;
+    
+    CCParticleExplosion *myEmitter;
+
 }
 
 // returns a CCScene that contains the Busy as the only child
@@ -67,5 +70,7 @@
 - (void)updateScore;
 - (void)saveData;
 - (void)scored:(int)scorVal;
+-(void)callEmitter;
+
 
 @end

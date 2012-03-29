@@ -26,6 +26,19 @@ enum {
 };
 
 
+/** Convert the given position into the box2d world. */
+static inline float ptm(float d)
+{
+    return d / PTM_RATIO;
+}
+
+/** Convert the given position into the cocos2d world. */
+static inline float mtp(float d)
+{
+    return d * PTM_RATIO;
+}
+
+
 // Busy implementation
 @implementation Busy
 
@@ -364,6 +377,14 @@ enum {
 - (void)scored:(int)scorVal {
     //[MusicHandler playBounce];
     //score -= 155;
+    
+    if (scorVal < 0) { 
+        [MusicHandler playWater];
+        [self callEmitter];
+
+    } else {
+        [MusicHandler playBounce];
+    }
     score += scorVal;
     [self updateScore];
 }
@@ -433,6 +454,27 @@ enum {
     [defaults synchronize];
 }
 
+
+-(void)callEmitter {    
+   // int xStrength = int(abs(bodyB->GetPosition().x - 8)) + 1;
+   // int numParticle = 30 +CCRANDOM_0_1()*200 * xStrength;
+    int numParticle = 30 +CCRANDOM_0_1()*100;
+    myEmitter = [[CCParticleExplosion alloc] initWithTotalParticles:numParticle];
+    //myEmitter.texture = [[CCTextureCache sharedTextureCache] addImage:@"goldstars1.png"];
+    myEmitter.texture = [[CCTextureCache sharedTextureCache] addImage:@"goldstars1sm.png"];
+    myEmitter.position = CGPointMake( mtp(ball->GetPosition().x) ,  mtp(ball->GetPosition().y));
+    myEmitter.life =0.4f + CCRANDOM_0_1()*0.2;
+    myEmitter.duration = 0.3f + CCRANDOM_0_1()*0.35;
+    myEmitter.scale = 0.5f;
+    //myEmitter.scale = 0.3 + CCRANDOM_0_1()*0.2 * xStrength;
+    myEmitter.speed = 50.0f + CCRANDOM_0_1()*50.0f;
+    //For not showing color
+    myEmitter.blendAdditive = YES;
+    [self addChild:myEmitter z:11];
+    myEmitter.autoRemoveOnFinish = YES;
+    
+    //NSLog(@" Y values %0.0f Xstrength  %d Speed value: %0.0f  numparticles %d  myemtterspped %f myemitetrscale %0.0f", bodyB->GetPosition().y,xStrength,speed, numParticle, myEmitter.speed, myEmitter.scale);
+}
 
 -(void) draw
 {
@@ -594,6 +636,7 @@ enum {
 // on "dealloc" you need to release all your retained objects
 - (void) dealloc
 {
+    [myEmitter release];
 	// in case you have something to dealloc, do it in this method
 	delete world;
 	world = NULL;
