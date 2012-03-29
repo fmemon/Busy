@@ -10,10 +10,10 @@
 
 //static NSString *WATER_EFFECT = @"splash2.caf";
 //static NSString *BOUNCE_EFFECT = @"boing.caf";
-static NSString *WATER_EFFECT = @"break.wav";
-static NSString *BOUNCE_EFFECT = @"burp.wav";
-static NSString *EXIT_EFFECT = @"giggle2.wav";
-static NSString *RESET_EFFECT = @"fart3.wav";
+static NSString *WATER_EFFECT = @"break.caf";
+static NSString *BOUNCE_EFFECT = @"burp.caf";
+static NSString *EXIT_EFFECT = @"giggle2.caf";
+static NSString *RESET_EFFECT = @"fart3.caf";
 
 @interface MusicHandler()
 +(void) playEffect:(NSString *)path;

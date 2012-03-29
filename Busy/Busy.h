@@ -75,7 +75,6 @@
 - (void)scored:(int)scorVal;
 -(void)callEmitter;
 -(void)setupLevels;
--(void)reset;
 - (void)restartGame:(b2Body*)bodyB;
 
 @end

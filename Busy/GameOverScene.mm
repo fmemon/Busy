@@ -156,7 +156,7 @@
     [self addChild:winner1];
     
     HS1 = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"%i",H1] fontName:@"Marker Felt" fontSize:28];
-    HS1.position = ccp(160.0f, 360.0f);
+    HS1.position = ccp(180.0f, 360.0f);
     //HS1.color = ccc3(8,51,255);
     HS1.color = ccGREEN;
     [self addChild:HS1];
@@ -167,7 +167,7 @@
     [self addChild:winner2];
     
     HS2 = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"%i",H2] fontName:@"Marker Felt" fontSize:28];
-    HS2.position = ccp(160.0f, 320.0f);
+    HS2.position = ccp(180.0f, 320.0f);
     HS2.color = ccRED;
     [self addChild:HS2];
     
@@ -178,7 +178,7 @@
     [self addChild:winner3];
     
     HS3 = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"%i",H3] fontName:@"Marker Felt" fontSize:28];
-    HS3.position = ccp(160.0f, 280.0f);
+    HS3.position = ccp(180.0f, 280.0f);
     //HS3.color = ccc3(189,58,212);
     HS3.color = ccYELLOW;
     [self addChild:HS3];    
@@ -230,7 +230,7 @@
     }
     if ([defaults integerForKey:@"newHS"]) {
         newHS = [defaults integerForKey:@"newHS"];
-        NSLog(@"restored teh new high score and it is %i", newHS);
+        //NSLog(@"restored teh new high score and it is %i", newHS);
     }
     if ([defaults integerForKey:@"HS1"]) {
         H1 = [defaults integerForKey:@"HS1"];
@@ -246,7 +246,7 @@
     if ([defaults boolForKey:@"IsMuted"]) {
         muted = [defaults boolForKey:@"IsMuted"];
         [[SimpleAudioEngine sharedEngine] setMute:muted];
-        NSLog(@"Ballyafter restore %d", muted);
+        //NSLog(@"Ballyafter restore %d", muted);
     }
 }
 

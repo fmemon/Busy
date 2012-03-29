@@ -145,14 +145,16 @@ static inline float mtp(float d)
         
         
         //show scores
-        highscoreLabel = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"HighScore: %i",highscore] fontName:@"Arial" fontSize:24];
-        highscoreLabel.color = ccc3(26, 46, 149);
+        highscoreLabel = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"HighScore: %i",highscore] fontName:@"Marker Felt" fontSize:24];
+        //highscoreLabel.color = ccc3(26, 46, 149);
+        highscoreLabel.color = ccBLUE;
         highscoreLabel.position = ccp(180.0f, 465.0f);
         [self addChild:highscoreLabel z:10];
         
-        scoreLabel = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"       Score: %i",score] fontName:@"Arial" fontSize:24];
+        scoreLabel = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"       Score: %i",score] fontName:@"Marker Felt" fontSize:24];
         scoreLabel.position = ccp(180.0f, 445.0f);
-        scoreLabel.color = ccc3(26, 46, 149);
+        //scoreLabel.color = ccc3(26, 46, 149);
+        scoreLabel.color = ccBLUE;
         [self addChild:scoreLabel z:10];
         
         
@@ -181,14 +183,12 @@ static inline float mtp(float d)
 		CCMenu *menu = [CCMenu menuWithItems:pause, nil];
 		menu.position = CGPointMake(10.0f, 7.5f);
 		[self addChild:menu z:11];
-
-        
         
         [[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"bally.plist"];
         CCSpriteBatchNode*  spriteSheet = [CCSpriteBatchNode batchNodeWithFile:@"bally.png"];
         [self addChild:spriteSheet];
-        [[CCTextureCache sharedTextureCache] addImage:@"bricks.png" ]; 
-        texture = [[CCTextureCache sharedTextureCache] addImage:@"bricks.png"];
+       // [[CCTextureCache sharedTextureCache] addImage:@"bricks.png" ]; 
+       // texture = [[CCTextureCache sharedTextureCache] addImage:@"bricks.png"];
         
         contactListener = new MyContactListener();
         world->SetContactListener(contactListener);
@@ -197,7 +197,6 @@ static inline float mtp(float d)
         [self setupLevels];
 
         [self schedule: @selector(tick:)]; 
-        
     }
     return self; 
 }
@@ -212,7 +211,7 @@ static inline float mtp(float d)
     level6 = FALSE;
     
     
-    float Xdelta = 2.0;
+    //float Xdelta = 2.0;
     float Ydelta = 2.0f;
     float Xinit = 2.3f;
     float Yinit = 2.0;
@@ -232,15 +231,14 @@ static inline float mtp(float d)
      [self createWall:6.3f where:5.5f];
      [self createWall:8.3f where:3.5f];
      */  
-
 }
 
 
 - (CCAction*)createBlinkAnim:(BOOL)isTarget {
     NSMutableArray *walkAnimFrames = [NSMutableArray array];
     
-    [walkAnimFrames addObject:[[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"blinkie1.png"]];
-    [walkAnimFrames addObject:[[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"blinkie2.png"]];
+    [walkAnimFrames addObject:[[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"dogC1.png"]];
+    [walkAnimFrames addObject:[[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:@"dogC2.png"]];
     
     CCAnimation *walkAnim = [CCAnimation animationWithFrames:walkAnimFrames delay:0.1f];
     
@@ -297,7 +295,7 @@ static inline float mtp(float d)
   */  
     //circle1
     //sprite = [CCSprite spriteWithSpriteFrameName:@"ball.png"];
-    ballSprite = [CCSprite spriteWithSpriteFrameName:@"blinkie1.png"];
+    ballSprite = [CCSprite spriteWithSpriteFrameName:@"dogC1.png"];
     ballSprite.position = ccp(480.0f/2, 50/PTM_RATIO);
     ballSprite.scale =0.8;
     [self addChild:ballSprite z:4 tag:11];
@@ -315,7 +313,7 @@ static inline float mtp(float d)
     _ballFixture = ball->CreateFixture(&fixtureDef);
         
     //Hole
-    CCSprite *holeSprite = [CCSprite spriteWithSpriteFrameName:@"hole.png"];
+    CCSprite *holeSprite = [CCSprite spriteWithSpriteFrameName:@"house.png"];
     holeSprite.position = ccp(480.0f/2, 50/PTM_RATIO);
     [self addChild:holeSprite z:-1 tag:99];
     bodyDef.userData = holeSprite;
@@ -331,7 +329,7 @@ static inline float mtp(float d)
     hole->CreateFixture(&fixtureDef);
     
     //Door
-    CCSprite *doorSprite = [CCSprite spriteWithFile:@"goldstars1sm.png"];
+    CCSprite *doorSprite = [CCSprite spriteWithSpriteFrameName:@"bone.png"];
     doorSprite.position = ccp(480.0f/2, 50/PTM_RATIO);
     [self addChild:doorSprite z:-1 tag:88];
     bodyDef.userData = doorSprite;
@@ -350,18 +348,18 @@ static inline float mtp(float d)
 
 -(void)createWall:(float)length where:(float)y {
     
-    ccTexParams params = {GL_LINEAR,GL_LINEAR,GL_REPEAT,GL_REPEAT};
+    //ccTexParams params = {GL_LINEAR,GL_LINEAR,GL_REPEAT,GL_REPEAT};
     
     ballSprite = [CCSprite spriteWithSpriteFrameName:@"eyesA1.png"];
     ballSprite.position = ccp(((arc4random() % 3) + (length-2.0)*32.0)/2, y*32.0f);
     [self addChild:ballSprite z:4 tag:11];
     [ballSprite runAction:[self createEyesBlinkAnim:YES]];
     
- /*   sprite= [[CCSprite alloc] initWithTexture:texture rect:CGRectMake(0, 0, length*64.0f, 0.35*64.0f)];
+  /*  sprite= [[CCSprite alloc] initWithTexture:texture rect:CGRectMake(0, 0, length*64.0f, 0.35*64.0f)];
     [sprite.texture setTexParameters:&params];        
     [self addChild:sprite z:3 tag:33];
     bodyDef1.userData = sprite;
-    */
+   */ 
     bodyDef1.type = b2_staticBody;
     bodyDef1.position.Set(0.0f, y);
     wall = world->CreateBody(&bodyDef1);
@@ -382,12 +380,12 @@ static inline float mtp(float d)
     [self addChild:ballSprite z:4 tag:11];
     [ballSprite runAction:[self createEyesBlinkAnim:YES]];
     
- /*   sprite= [[CCSprite alloc] initWithTexture:texture rect:CGRectMake(0, 0, 5.0f*64.0f, 0.35*64.0f)];
+   /* sprite= [[CCSprite alloc] initWithTexture:texture rect:CGRectMake(0, 0, 5.0f*64.0f, 0.35*64.0f)];
     [sprite.texture setTexParameters:&params];        
     [self addChild:sprite z:3 tag:33];
     bodyDef1.userData = sprite;
-   */ 
-     bodyDef1.position.Set(5.8f + length, y);
+    */
+     bodyDef1.position.Set(6.2f + length, y);
     wall = world->CreateBody(&bodyDef1);
     boxy.SetAsBox(5.0f, 0.35f);    
     fixtureDef.shape = &boxy;
@@ -477,7 +475,7 @@ static inline float mtp(float d)
 - (void)saveData {   
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setInteger:score forKey:@"newHS"];
-    NSLog(@"saved high score");
+//NSLog(@"saved high score");
     
     [defaults synchronize];
 }
@@ -507,7 +505,6 @@ static inline float mtp(float d)
         muted = TRUE;
     }
     [[SimpleAudioEngine sharedEngine] setMute:muted];
-    
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setBool:muted forKey:@"IsMuted"];
@@ -586,7 +583,6 @@ static inline float mtp(float d)
                 [self scored:550];
                 //NSLog(@"Blinkie fell level1");
                 //recreate the screen to "reset"
-                
             }
         }
         else if (ball->GetPosition().y < 4.0) {
@@ -595,18 +591,25 @@ static inline float mtp(float d)
                 [self scored:550];
                 //NSLog(@"Blinkie fell level2");
             }        }
-        else if (ball->GetPosition().y < 8.0) {
+        else if (ball->GetPosition().y < 6.0) {
             if(!level3) {
                 level3 = TRUE;
                 [self scored:550];
                 //NSLog(@"Blinkie fell level3");
             }        }
+        else if (ball->GetPosition().y < 8.0) {
+            if(!level4) {
+                level4 = TRUE;
+                [self scored:550];
+                //NSLog(@"Blinkie fell level4");
+            }        }
         else if (ball->GetPosition().y < 10.0) {
             if(!level5) {
                 level5 = TRUE;
                 [self scored:550];
-                //NSLog(@"Blinkie fell level4");
-            }        }
+                //NSLog(@"Blinkie fell level5");
+            }        
+        }
         else if (ball->GetPosition().y < 12.0) {
             if(!level6) {
                 level6 = TRUE;
@@ -714,11 +717,37 @@ static inline float mtp(float d)
 - (void) dealloc
 {
     [myEmitter release];
+    
+    //IF you have particular spritesheets to be removed! Don't use these if you haven't any
+    //[[CCSpriteFrameCache sharedSpriteFrameCache]removeSpriteFramesFromFile:@"froggie.plist"];
+    [[CCSpriteFrameCache sharedSpriteFrameCache]removeSpriteFramesFromFile:@"bally.plist"];
+    
+    //Use these
+    [[CCSpriteFrameCache sharedSpriteFrameCache] removeSpriteFrames];
+    [[CCSpriteFrameCache sharedSpriteFrameCache] removeUnusedSpriteFrames];
+    
+    
+    //Use these
+    [[CCTextureCache sharedTextureCache] removeUnusedTextures];
+    [[CCTextureCache sharedTextureCache] removeAllTextures];
+    [[CCDirector sharedDirector] purgeCachedData];
+    
+    //Try out and use it. Not compulsory
+    [self removeAllChildrenWithCleanup: YES];
+    
 	// in case you have something to dealloc, do it in this method
 	delete world;
 	world = NULL;
 	
 	delete m_debugDraw;
+    
+    [groundWalls release];
+    [walls release];
+        
+    //[pause release];
+    //[sprite release];
+
+    
     
 	// don't forget to call "super dealloc"
 	[super dealloc];
