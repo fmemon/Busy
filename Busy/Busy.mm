@@ -85,12 +85,13 @@ enum {
         world = new b2World(gravity, doSleep); 
         world->SetContinuousPhysics(true); 
         
-        // Debug Draw functions
+   /*     // Debug Draw functions
         m_debugDraw = new GLESDebugDraw( PTM_RATIO );
         world->SetDebugDraw(m_debugDraw); 
         uint32 flags = 0;
         flags += b2DebugDraw::e_shapeBit;
         m_debugDraw->SetFlags(flags);  
+        */
         
         ground = NULL;
         b2BodyDef bd;
@@ -521,13 +522,13 @@ enum {
             
             // Is sprite A a cat and sprite B a car?
             if (spriteA.tag == 88 && spriteB.tag == 11) {
-                NSLog(@"Game Ended");
+                //NSLog(@"Game Ended");
                 //[[CCDirector sharedDirector] replaceScene:[GameOverScene node]];
                 [self endGame:bodyA];
             }
             // Is sprite A a car and sprite B a cat?
             else if (spriteA.tag == 11 && spriteB.tag == 88) {
-                NSLog(@"Game Ended");
+                //NSLog(@"Game Ended");
                 //[[CCDirector sharedDirector] replaceScene:[GameOverScene node]];
                 [self endGame:bodyA];
             }

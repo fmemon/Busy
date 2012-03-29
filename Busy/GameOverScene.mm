@@ -150,7 +150,7 @@
 
 -(void)setLabels {
     winner1 = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"1. %@",W1] fontName:@"Marker Felt" fontSize:24];
-    winner1.position = ccp(60.0f, 280.0f);
+    winner1.position = ccp(80.0f, 280.0f);
     winner1.color = ccc3(8,51,255);
     [self addChild:winner1];
     
@@ -160,7 +160,7 @@
     [self addChild:HS1];
     
     winner2 = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"2. %@",W2] fontName:@"Marker Felt" fontSize:24];
-    winner2.position = ccp(60.0f, 240.0f);
+    winner2.position = ccp(80.0f, 240.0f);
     winner2.color = ccRED;
     [self addChild:winner2];
     
@@ -170,7 +170,7 @@
     [self addChild:HS2];
     
     winner3 = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"3. %@",W3] fontName:@"Marker Felt" fontSize:24];
-    winner3.position = ccp(60.0f, 200.0f);
+    winner3.position = ccp(80.0f, 200.0f);
     winner3.color = ccc3(189,58,212);
     [self addChild:winner3];
     
