@@ -19,7 +19,7 @@
 	b2World* world;
 	GLESDebugDraw *m_debugDraw;
     
-    b2BodyDef bodyDef,bodyDef1;
+    b2BodyDef bodyDef,bodyDef1, ballBodyDef;
     b2Body* ground;
     b2Vec2 initVel;
     b2CircleShape circleShape;
@@ -71,6 +71,7 @@
 - (void)saveData;
 - (void)scored:(int)scorVal;
 -(void)callEmitter;
+-(void)setupLevels;
 
 
 @end

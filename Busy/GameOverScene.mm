@@ -155,7 +155,7 @@
     [self addChild:winner1];
     
     HS1 = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"%i",H1] fontName:@"Marker Felt" fontSize:24];
-    HS1.position = ccp(140.0f, 280.0f);
+    HS1.position = ccp(160.0f, 280.0f);
     HS1.color = ccc3(8,51,255);
     [self addChild:HS1];
     
@@ -165,7 +165,7 @@
     [self addChild:winner2];
     
     HS2 = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"%i",H2] fontName:@"Marker Felt" fontSize:24];
-    HS2.position = ccp(140.0f, 240.0f);
+    HS2.position = ccp(160.0f, 240.0f);
     HS2.color = ccRED;
     [self addChild:HS2];
     
@@ -175,7 +175,7 @@
     [self addChild:winner3];
     
     HS3 = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"%i",H3] fontName:@"Marker Felt" fontSize:24];
-    HS3.position = ccp(140.0f, 200.0f);
+    HS3.position = ccp(160.0f, 200.0f);
     HS3.color = ccc3(189,58,212);
     [self addChild:HS3];    
 }

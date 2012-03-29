@@ -525,6 +525,8 @@ static inline float mtp(float d)
                 level1 = TRUE;
                 [self scored:550];
                 //NSLog(@"Blinkie fell level1");
+                //recreate the screen to "reset"
+                
             }
         }
         else if (ball->GetPosition().y < 4.0) {
