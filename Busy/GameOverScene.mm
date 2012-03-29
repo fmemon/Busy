@@ -72,12 +72,12 @@
         }        
         
         tapLabel = [CCLabelTTF labelWithString:@"Tap to Restart" fontName:@"Marker Felt" fontSize:35];
-		tapLabel.position = ccp(249, 105.0f);    
+		tapLabel.position = ccp(140, 105.0f);    
         tapLabel.color = ccBLUE;
 		[self addChild: tapLabel];
         
         // Enable touches
-     /*   CGSize screenSize = [CCDirector sharedDirector].winSize;
+        CGSize screenSize = [CCDirector sharedDirector].winSize;
         
         [[CCTouchDispatcher sharedDispatcher] addTargetedDelegate:self priority:0 swallowsTouches:YES];
         //Pause Toggle can not sure frame cache for sprites!!!!!
@@ -102,7 +102,7 @@
 		menu.position = CGPointZero;
 		[self addChild:menu z:11];
       
-      */
+    
         
     }
     return self; 

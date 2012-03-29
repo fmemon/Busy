@@ -181,13 +181,13 @@ enum {
         
         [self setupBoard];
         
-        float Xdelta = 2.0f;
+        float Xdelta = 1.0f;
         float Ydelta = 2.0f;
         float Xinit = 2.3f;
         float Yinit = 2.0;
         
 
-        for (int i = 0; i <4; i++) {
+        for (int i = 0; i <7; i++) {
              if (i < 5)[self createWall:Xinit + (i *Xdelta) where:Yinit + (i*Ydelta)];
              else         [self createWall:3.3f where:Yinit + (5*Ydelta)];
         }
@@ -462,6 +462,24 @@ enum {
 			myActor.position = CGPointMake( b->GetPosition().x * PTM_RATIO, b->GetPosition().y * PTM_RATIO);
 			myActor.rotation = -1 * CC_RADIANS_TO_DEGREES(b->GetAngle());
 		}	
+        //check if blinkie fell a level
+        if (ball->GetPosition().y < 2.0){
+            NSLog(@"Blinkie fell last level");
+        }
+        else if (ball->GetPosition().y < 4.0) {
+            NSLog(@"Blinkie fell second to last level");
+        }
+        else if (ball->GetPosition().y < 6.0) {
+            NSLog(@"Blinkie fell third to last level");
+        }
+        else if (ball->GetPosition().y < 10.0) {
+            NSLog(@"Blinkie fell");
+        }
+        else if (ball->GetPosition().y < 12.0) {
+            NSLog(@"Blinkie fell");
+        }
+
+        
 	}
     // Loop through all of the box2d bodies that are currently colliding, that we have
     // gathered with our custom contact listener...
