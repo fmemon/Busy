@@ -79,13 +79,6 @@ static inline float mtp(float d)
         stopWater = TRUE;
         muted = FALSE;
         [self restoreData];
-        level1 = FALSE;
-        level2 = FALSE;
-        level3 = FALSE;
-        level4 = FALSE;
-        level5 = FALSE;
-        level6 = FALSE;
-
         
         // Define the gravity vector.
         b2Vec2 gravity;
@@ -109,7 +102,6 @@ static inline float mtp(float d)
         ground = NULL;
         b2BodyDef bd;
         ground = world->CreateBody(&bd);
-        
         
         bodyDef.type=b2_dynamicBody;
         
@@ -147,9 +139,10 @@ static inline float mtp(float d)
         containerBody->CreateFixture(&screenBoxShape, density);
         
         
-        walls = [[NSArray alloc] initWithObjects: 
+        groundWalls = [[NSArray alloc] initWithObjects: 
                  [NSValue valueWithPointer:_leftFixture],
                  [NSValue valueWithPointer:_rightFixture], nil];
+        
         
         //show scores
         highscoreLabel = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"HighScore: %i",highscore] fontName:@"Arial" fontSize:24];
@@ -201,31 +194,47 @@ static inline float mtp(float d)
         world->SetContactListener(contactListener);
         
         [self setupBoard];
-        
-        float Xdelta = 2.0;
-        float Ydelta = 2.0f;
-        float Xinit = 2.3f;
-        float Yinit = 2.0;
-        
+        [self setupLevels];
 
-        for (int i = 0; i <7; i++) {
-            //if (i < 5)[self createWall:Xinit + (i *Xdelta) where:Yinit + (i*Ydelta)];
-            //else         [self createWall:Xinit +1.0f where:Yinit + (5*Ydelta)];
-           if (i < 5)[self createWall:Xinit + (arc4random()% 7) where:Yinit + (i*Ydelta)];
-            else         [self createWall:Xinit +arc4random() % 1 where:Yinit + (5*Ydelta)];
-        }
-    /*    [self createWall:3.3f where:13.5f];
-        [self createWall:3.3f where:11.5f];
-        [self createWall:2.3f where:9.5f];
-        [self createWall:4.3f where:7.5f];
-        [self createWall:6.3f where:5.5f];
-        [self createWall:8.3f where:3.5f];
-      */  
         [self schedule: @selector(tick:)]; 
         
     }
     return self; 
 }
+
+-(void)setupLevels {
+    
+    level1 = FALSE;
+    level2 = FALSE;
+    level3 = FALSE;
+    level4 = FALSE;
+    level5 = FALSE;
+    level6 = FALSE;
+    
+    
+    float Xdelta = 2.0;
+    float Ydelta = 2.0f;
+    float Xinit = 2.3f;
+    float Yinit = 2.0;
+    
+    walls = [[NSMutableArray alloc] initWithCapacity:18];
+
+    for (int i = 0; i <7; i++) {
+        //if (i < 5)[self createWall:Xinit + (i *Xdelta) where:Yinit + (i*Ydelta)];
+        //else         [self createWall:Xinit +1.0f where:Yinit + (5*Ydelta)];
+        if (i < 5)[self createWall:Xinit + (arc4random()% 7) where:Yinit + (i*Ydelta)];
+        else         [self createWall:Xinit +arc4random() % 1 where:Yinit + (5*Ydelta)];
+    }
+    /*    [self createWall:3.3f where:13.5f];
+     [self createWall:3.3f where:11.5f];
+     [self createWall:2.3f where:9.5f];
+     [self createWall:4.3f where:7.5f];
+     [self createWall:6.3f where:5.5f];
+     [self createWall:8.3f where:3.5f];
+     */  
+
+}
+
 
 - (CCAction*)createBlinkAnim:(BOOL)isTarget {
     NSMutableArray *walkAnimFrames = [NSMutableArray array];
@@ -294,9 +303,10 @@ static inline float mtp(float d)
     [self addChild:ballSprite z:4 tag:11];
     [ballSprite runAction:[self createBlinkAnim:YES]];
 
-    bodyDef.userData = ballSprite;
-    bodyDef.position.Set(1.47f, 14.5f);
-    ball = world->CreateBody(&bodyDef);
+    ballBodyDef.type = b2_dynamicBody;
+    ballBodyDef.userData = ballSprite;
+    ballBodyDef.position.Set(1.47f, 14.5f);
+    ball = world->CreateBody(&ballBodyDef);
     circleShape.m_radius = (ballSprite.contentSize.width / 32.0f) * 0.3f;
     fixtureDef.shape = &circleShape;
     fixtureDef.density = 5.0f*CC_CONTENT_SCALE_FACTOR();
@@ -331,14 +341,14 @@ static inline float mtp(float d)
     [self addChild:ballSprite z:4 tag:11];
     [ballSprite runAction:[self createEyesBlinkAnim:YES]];
     
-   /* sprite= [[CCSprite alloc] initWithTexture:texture rect:CGRectMake(0, 0, length*64.0f, 0.35*64.0f)];
+ /*   sprite= [[CCSprite alloc] initWithTexture:texture rect:CGRectMake(0, 0, length*64.0f, 0.35*64.0f)];
     [sprite.texture setTexParameters:&params];        
     [self addChild:sprite z:3 tag:33];
     bodyDef1.userData = sprite;
     */
     bodyDef1.type = b2_staticBody;
     bodyDef1.position.Set(0.0f, y);
-    b2Body* wall = world->CreateBody(&bodyDef1);
+    wall = world->CreateBody(&bodyDef1);
     boxy.SetAsBox(length, 0.35f);
     fixtureDef.shape = &boxy;
     fixtureDef.density = 0.015000f;
@@ -348,6 +358,7 @@ static inline float mtp(float d)
     fixtureDef.filter.categoryBits = uint16(65535);
     fixtureDef.filter.maskBits = uint16(65535);        
     wall->CreateFixture(&boxy,0);
+    [walls addObject:[NSValue valueWithPointer:wall]];
     
     ballSprite = [CCSprite spriteWithSpriteFrameName:@"eyesA1.png"];
     //ballSprite.position = ccp((5.8f*32.0f)+ length*32.0/2, y*32.0f);
@@ -355,11 +366,11 @@ static inline float mtp(float d)
     [self addChild:ballSprite z:4 tag:11];
     [ballSprite runAction:[self createEyesBlinkAnim:YES]];
     
-    /* sprite= [[CCSprite alloc] initWithTexture:texture rect:CGRectMake(0, 0, 5.0f*64.0f, 0.35*64.0f)];
+ /*   sprite= [[CCSprite alloc] initWithTexture:texture rect:CGRectMake(0, 0, 5.0f*64.0f, 0.35*64.0f)];
     [sprite.texture setTexParameters:&params];        
     [self addChild:sprite z:3 tag:33];
     bodyDef1.userData = sprite;
-    */
+   */ 
      bodyDef1.position.Set(5.8f + length, y);
     wall = world->CreateBody(&bodyDef1);
     boxy.SetAsBox(5.0f, 0.35f);    
@@ -371,6 +382,7 @@ static inline float mtp(float d)
     fixtureDef.filter.categoryBits = uint16(65535);
     fixtureDef.filter.maskBits = uint16(65535);        
     wall->CreateFixture(&boxy,0);
+    [walls addObject:[NSValue valueWithPointer:wall]];
 
 }
 
@@ -392,12 +404,30 @@ static inline float mtp(float d)
 - (void)endGame:(b2Body*)bodyB {
     if (stopWater) {
         //[MusicHandler playWater];
-        stopWater = FALSE;
+       // stopWater = FALSE;
         bodyB->SetLinearVelocity(b2Vec2(0,0));
         bodyB->SetAngularVelocity(0);
         
         [self saveData];
-        [self performSelector:@selector(gotoHS) withObject:nil afterDelay:0.3];
+        //[self performSelector:@selector(gotoHS) withObject:nil afterDelay:0.3];
+        //ballBodyDef.position.y = 14.5f;
+        float x = ball->GetPosition().x;
+        // Previous bullets cleanup
+        if (walls)
+        {
+            for (NSValue *wallPointer in walls)
+            {
+                b2Body *aWall = (b2Body*)[wallPointer pointerValue];
+                CCNode *node = (CCNode*)aWall->GetUserData();
+                [self removeChild:node cleanup:YES];
+                world->DestroyBody(aWall);
+            }
+            [walls release];
+            walls = nil;
+        }
+        [self setupLevels];
+        
+        ball->SetTransform(b2Vec2(x, 14.5f), 0);
     }
 }
 
@@ -584,7 +614,7 @@ static inline float mtp(float d)
             
         }
         
-        for (NSData *fixtureData in walls)
+        for (NSData *fixtureData in groundWalls)
         {
             b2Fixture *fixture;
             fixture = (b2Fixture*)[fixtureData pointerValue];

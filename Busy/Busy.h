@@ -30,6 +30,7 @@
     b2Body* hole;
     CCSprite *sprite;
     CCSprite *ballSprite;
+    b2Body* wall;
     
     MyContactListener *contactListener;
     CCTexture2D *texture;
@@ -45,7 +46,8 @@
     b2Fixture *_leftFixture;
     b2Fixture *_rightFixture;
     b2Fixture * _ballFixture;
-    NSArray *walls;
+    NSArray *groundWalls;
+    NSMutableArray *walls;
     
     BOOL level1;
     BOOL level2;
@@ -72,6 +74,7 @@
 - (void)scored:(int)scorVal;
 -(void)callEmitter;
 -(void)setupLevels;
+-(void)reset;
 
 
 @end
