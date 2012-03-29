@@ -317,9 +317,9 @@ static inline float mtp(float d)
     //Hole
     CCSprite *holeSprite = [CCSprite spriteWithSpriteFrameName:@"hole.png"];
     holeSprite.position = ccp(480.0f/2, 50/PTM_RATIO);
-    [self addChild:holeSprite z:-1 tag:88];
+    [self addChild:holeSprite z:-1 tag:99];
     bodyDef.userData = holeSprite;
-    bodyDef.position.Set(5.0f, 0.5f);
+    bodyDef.position.Set(8.0f, 0.5f);
     bodyDef.type = b2_staticBody;
     hole = world->CreateBody(&bodyDef);
     circleShape.m_radius = (holeSprite.contentSize.width / 32.0f) * 0.05f;
@@ -329,6 +329,22 @@ static inline float mtp(float d)
     fixtureDef.restitution = 0.0f;
     fixtureDef.isSensor = true;
     hole->CreateFixture(&fixtureDef);
+    
+    //Door
+    CCSprite *doorSprite = [CCSprite spriteWithFile:@"goldstars1sm.png"];
+    doorSprite.position = ccp(480.0f/2, 50/PTM_RATIO);
+    [self addChild:doorSprite z:-1 tag:88];
+    bodyDef.userData = doorSprite;
+    bodyDef.position.Set(2.0f, 0.5f);
+    bodyDef.type = b2_staticBody;
+    door = world->CreateBody(&bodyDef);
+    circleShape.m_radius = (holeSprite.contentSize.width / 32.0f) * 0.05f;
+    fixtureDef.shape = &circleShape;
+    fixtureDef.density = 1.0f*CC_CONTENT_SCALE_FACTOR();
+    fixtureDef.friction = 0.0f;
+    fixtureDef.restitution = 0.0f;
+    fixtureDef.isSensor = true;
+    door->CreateFixture(&fixtureDef);
 }
 
 
@@ -401,7 +417,21 @@ static inline float mtp(float d)
     [self updateScore];
 }
 
+
 - (void)endGame:(b2Body*)bodyB {
+    if (stopWater) {
+        //[MusicHandler playWater];
+         stopWater = FALSE;
+        bodyB->SetLinearVelocity(b2Vec2(0,0));
+        bodyB->SetAngularVelocity(0);
+        
+        [self saveData];
+        [self performSelector:@selector(gotoHS) withObject:nil afterDelay:0.2];
+    }
+}
+
+
+- (void)restartGame:(b2Body*)bodyB {
     if (stopWater) {
         //[MusicHandler playWater];
        // stopWater = FALSE;
@@ -599,14 +629,21 @@ static inline float mtp(float d)
             CCSprite *spriteA = (CCSprite *) bodyA->GetUserData();
             CCSprite *spriteB = (CCSprite *) bodyB->GetUserData();
             
-            // Is sprite A a cat and sprite B a car?
             if (spriteA.tag == 88 && spriteB.tag == 11) {
+                //NSLog(@"Game Ended");
+                //[[CCDirector sharedDirector] replaceScene:[GameOverScene node]];
+                [self restartGame:bodyA];
+            }
+            else if (spriteA.tag == 11 && spriteB.tag == 88) {
+                //NSLog(@"Game Ended");
+                //[[CCDirector sharedDirector] replaceScene:[GameOverScene node]];
+                [self restartGame:bodyA];
+            } else if (spriteA.tag == 99 && spriteB.tag == 11) {
                 //NSLog(@"Game Ended");
                 //[[CCDirector sharedDirector] replaceScene:[GameOverScene node]];
                 [self endGame:bodyA];
             }
-            // Is sprite A a car and sprite B a cat?
-            else if (spriteA.tag == 11 && spriteB.tag == 88) {
+            else if (spriteA.tag == 11 && spriteB.tag == 99) {
                 //NSLog(@"Game Ended");
                 //[[CCDirector sharedDirector] replaceScene:[GameOverScene node]];
                 [self endGame:bodyA];

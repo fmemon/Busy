@@ -28,6 +28,7 @@
     b2PolygonShape boxy;
     b2Body* ball;
     b2Body* hole;
+    b2Body* door;
     CCSprite *sprite;
     CCSprite *ballSprite;
     b2Body* wall;
@@ -75,6 +76,6 @@
 -(void)callEmitter;
 -(void)setupLevels;
 -(void)reset;
-
+- (void)restartGame:(b2Body*)bodyB;
 
 @end
