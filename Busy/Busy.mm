@@ -61,11 +61,18 @@ enum {
         //CCLOG(@"Screen width %0.2f screen height %0.2f",screenSize.width,screenSize.height); 
         
         //initial settings
-        score  = 1000;
+        score  = 0;
         highscore = 0;
         stopWater = TRUE;
         muted = FALSE;
         [self restoreData];
+        level1 = FALSE;
+        level2 = FALSE;
+        level3 = FALSE;
+        level4 = FALSE;
+        level5 = FALSE;
+        level6 = FALSE;
+
         
         // Define the gravity vector.
         b2Vec2 gravity;
@@ -133,11 +140,11 @@ enum {
         //show scores
         highscoreLabel = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"HighScore: %i",highscore] fontName:@"Arial" fontSize:24];
         highscoreLabel.color = ccc3(26, 46, 149);
-        highscoreLabel.position = ccp(180.0f, 470.0f);
+        highscoreLabel.position = ccp(180.0f, 465.0f);
         [self addChild:highscoreLabel z:10];
         
         scoreLabel = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"       Score: %i",score] fontName:@"Arial" fontSize:24];
-        scoreLabel.position = ccp(180.0f, 450.0f);
+        scoreLabel.position = ccp(180.0f, 465.0f);
         scoreLabel.color = ccc3(26, 46, 149);
         [self addChild:scoreLabel z:10];
         
@@ -348,9 +355,10 @@ enum {
 
 }
 
-- (void)scored:(b2Body*)bodyB {
+- (void)scored:(int)scorVal {
     //[MusicHandler playBounce];
-    score -= 155;
+    //score -= 155;
+    score += scorVal;
     [self updateScore];
 }
 
@@ -382,6 +390,7 @@ enum {
 - (void)saveData {   
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setInteger:score forKey:@"newHS"];
+    NSLog(@"saved high score");
     
     [defaults synchronize];
 }
@@ -464,21 +473,37 @@ enum {
 		}	
         //check if blinkie fell a level
         if (ball->GetPosition().y < 2.0){
-            NSLog(@"Blinkie fell last level");
+            if(!level1) {
+                level1 = TRUE;
+                [self scored:550];
+                //NSLog(@"Blinkie fell level1");
+            }
         }
         else if (ball->GetPosition().y < 4.0) {
-            NSLog(@"Blinkie fell second to last level");
-        }
-        else if (ball->GetPosition().y < 6.0) {
-            NSLog(@"Blinkie fell third to last level");
-        }
+            if(!level2) {
+                level2 = TRUE;
+                [self scored:550];
+                //NSLog(@"Blinkie fell level2");
+            }        }
+        else if (ball->GetPosition().y < 8.0) {
+            if(!level3) {
+                level3 = TRUE;
+                [self scored:550];
+                //NSLog(@"Blinkie fell level3");
+            }        }
         else if (ball->GetPosition().y < 10.0) {
-            NSLog(@"Blinkie fell");
-        }
+            if(!level5) {
+                level5 = TRUE;
+                [self scored:550];
+                //NSLog(@"Blinkie fell level4");
+            }        }
         else if (ball->GetPosition().y < 12.0) {
-            NSLog(@"Blinkie fell");
+            if(!level6) {
+                level6 = TRUE;
+                [self scored:550];
+                //NSLog(@"Blinkie fell level5");
+            }        
         }
-
         
 	}
     // Loop through all of the box2d bodies that are currently colliding, that we have
@@ -497,14 +522,14 @@ enum {
             // Is sprite A a cat and sprite B a car?
             if (spriteA.tag == 88 && spriteB.tag == 11) {
                 NSLog(@"Game Ended");
-                [[CCDirector sharedDirector] replaceScene:[GameOverScene node]];
-                
+                //[[CCDirector sharedDirector] replaceScene:[GameOverScene node]];
+                [self endGame:bodyA];
             }
             // Is sprite A a car and sprite B a cat?
             else if (spriteA.tag == 11 && spriteB.tag == 88) {
                 NSLog(@"Game Ended");
-                [[CCDirector sharedDirector] replaceScene:[GameOverScene node]];
-                
+                //[[CCDirector sharedDirector] replaceScene:[GameOverScene node]];
+                [self endGame:bodyA];
             }
             
         }
@@ -517,11 +542,11 @@ enum {
             if ((contact.fixtureA == _leftFixture   && contact.fixtureB == _ballFixture) ||
                 (contact.fixtureA == _ballFixture && contact.fixtureB == _leftFixture  )) {
                 // NSLog(@"Ball hit bottom!");
-                    [self scored:bodyA];
+                    [self scored:-155];
             } else if ((contact.fixtureA == _rightFixture   && contact.fixtureB == _ballFixture) ||
                                    (contact.fixtureA == _ballFixture && contact.fixtureB == _rightFixture  )) {
                 // NSLog(@"Ball hit bottom!");
-                [self scored:bodyA];
+                [self scored:-155];
             } 
         } 
 

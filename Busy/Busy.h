@@ -46,7 +46,13 @@
     b2Fixture *_rightFixture;
     b2Fixture * _ballFixture;
     NSArray *walls;
-
+    
+    BOOL level1;
+    BOOL level2;
+    BOOL level3;
+    BOOL level4;
+    BOOL level5;
+    BOOL level6;
 }
 
 // returns a CCScene that contains the Busy as the only child
@@ -60,6 +66,6 @@
 - (void)restoreData;
 - (void)updateScore;
 - (void)saveData;
-- (void)scored:(b2Body*)bodyB;
+- (void)scored:(int)scorVal;
 
 @end
